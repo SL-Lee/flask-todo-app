@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{% block title %}{% endblock %} | To-do</title>
+  <link rel="stylesheet" type="text/css"
+    href="/static/css/halfmoon-variables.min.css" />
+  <link rel="stylesheet" type="text/css"
+    href="/static/css/bootstrap-icons.css" />
+  <link rel="stylesheet" type="text/css" href="/static/css/inter.css" />
+  <link rel="stylesheet" type="text/css" href="/static/css/iosevka-fixed.css" />
+  <link rel="stylesheet" type="text/css" href="/static/css/styles.css" />
+  <link rel="icon" type="image/png" href="/static/images/favicon.png" />
+</head>
+
+<body
+  class="dark-mode with-custom-webkit-scrollbars with-custom-css-scrollbars">
+  <div
+    class="page-wrapper with-navbar {% if current_user.is_authenticated %}with-sidebar{% endif %}"
+    data-sidebar-type="overlayed-sm-and-down">
+    <!-- Navbar -->
+    <nav class="navbar">
+      {% if current_user.is_authenticated %}
+      <div class="navbar-content">
+        <button class="btn btn-action" type="button"
+          onclick="halfmoon.toggleSidebar()">
+          <i class="bi bi-list"></i>
+        </button>
+      </div>
+      {% endif %}
+      <a href="/" class="navbar-brand">
+        <img src="/static/images/favicon.png" /> To-do
+      </a>
+      <ul class="navbar-nav d-none d-md-flex">
+        <li class="nav-item active">
+          <a href="/" class="nav-link">Home</a>
+        </li>
+        {% if current_user.is_authenticated %}
+        <li class="nav-item">
+          <form action="/logout" method="POST" class="h-full">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+            <a class="nav-link" href="#"
+              onclick="this.parentElement.requestSubmit()">Logout</a>
+          </form>
+        </li>
+        {% else %}
+        <li class="nav-item">
+          <a href="/signup" class="nav-link">Sign Up</a>
+        </li>
+        <li class="nav-item">
+          <a href="/login" class="nav-link">Log In</a>
+        </li>
+        {% endif %}
+      </ul>
+      <div class="navbar-content d-md-none ml-auto">
+        <div class="dropdown with-arrow">
+          <button class="btn" data-toggle="dropdown" type="button"
+            id="navbar-dropdown-toggle-btn-1">
+            Menu
+            <i class="bi bi-chevron-down"></i>
+          </button>
+          <div class="dropdown-menu dropdown-menu-right w-200">
+            <a href="/" class="dropdown-item text-primary">Home</a>
+            {% if current_user.is_authenticated %}
+            <form action="/logout" method="POST">
+              <input type="hidden" name="csrf_token"
+                value="{{ csrf_token() }}" />
+              <a class="dropdown-item" href="#"
+                onclick="this.parentElement.requestSubmit()">Logout</a>
+            </form>
+            {% else %}
+            <a href="/signup" class="dropdown-item">Sign Up</a>
+            <a href="/login" class="dropdown-item">Log In</a>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+      <button class="btn btn-square ml-10 ml-md-auto" type="button"
+        onclick="toggleDarkMode()">
+        <i id="toggle-dark-mode-button-icon"
+          class="bi bi-brightness-high-fill"></i>
+      </button>
+    </nav>
+
+    {% if current_user.is_authenticated %}
+    <!-- Sidebar overlay -->
+    <div class="sidebar-overlay" onclick="halfmoon.toggleSidebar()"></div>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <div class="sidebar-menu">
+        <a href="/" class="sidebar-brand mb-15">
+          <img src="/static/images/favicon.png" />
+          To-do
+        </a>
+        <h5 class="sidebar-title">Sidebar Header #1</h5>
+        <div class="sidebar-divider"></div>
+        <a href="#" class="sidebar-link sidebar-link-with-icon active">
+          <span class="sidebar-icon">
+            <i class="bi bi-house-door"></i>
+          </span>
+          Sidebar Link #1
+        </a>
+        <a href="#" class="sidebar-link sidebar-link-with-icon">
+          <span class="sidebar-icon">
+            <i class="bi bi-book"></i>
+          </span>
+          Sidebar Link #2
+        </a>
+        <br />
+        <h5 class="sidebar-title">Sidebar Header #2</h5>
+        <div class="sidebar-divider"></div>
+        <a href="#" class="sidebar-link sidebar-link-with-icon">
+          <span class="sidebar-icon">
+            <i class="bi bi-bookmark"></i>
+          </span>
+          Sidebar Link #3
+        </a>
+        <a href="#" class="sidebar-link sidebar-link-with-icon">
+          <span class="sidebar-icon">
+            <i class="bi bi-box"></i>
+          </span>
+          Sidebar Link #4
+        </a>
+        <a href="#" class="sidebar-link sidebar-link-with-icon">
+          <span class="sidebar-icon">
+            <i class="bi bi-calendar"></i>
+          </span>
+          Sidebar Link #5
+        </a>
+      </div>
+    </div>
+    {% endif %}
+
+    <!-- Sticky toast alerts -->
+    <div class="sticky-alerts">
+      {% with messages = get_flashed_messages(with_categories=true) %}
+      {% for category, message in messages %}
+      <div class="alert alert-{{ category }}" role="alert"
+        id="alert-{{ loop.index }}">
+        {{ message }}
+      </div>
+      {% endfor %}
+      {% endwith %}
+    </div>
+
+    <!-- Content -->
+    <div class="content-wrapper">
+      <div class="page-content">
+        <div class="content">
+          {% block content %}
+          {% endblock %}
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="/static/js/halfmoon.min.js"></script>
+  <script src="/static/js/toggleDarkMode.js"></script>
+  <script src="/static/js/toastFlashedMessages.js"></script>
+</body>
+
+</html>
