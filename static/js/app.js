@@ -1,35 +1,75 @@
-class Todo extends React.Component {
-  render() {
-    return React.createElement(
-      "div",
-      { class: "card" },
-      React.createElement("h2", { class: "card-title" }, this.props.title),
-      this.props.contents
-        ? React.createElement("p", null, this.props.contents)
-        : React.createElement(
-          "p",
-          { class: "text-muted font-italic" },
-          "Content not provided"
-        )
+import { ConfirmationModal, CreateTodoButton } from "./appComponents.js";
+import { CreateTodoView, EditTodoView, TodoListView } from "./appViews.js";
+
+class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { activeView: "TodoListView" };
+    this.showConfirmationModal = this.showConfirmationModal.bind(this);
+    this.updateView = this.updateView.bind(this);
+  }
+
+  updateView(newView) {
+    this.setState({ activeView: newView });
+  }
+
+  showConfirmationModal(
+    modalId,
+    modalTitle,
+    modalBody,
+    onOkHandler
+  ) {
+    ReactDOM.render(
+      React.createElement(
+        ConfirmationModal,
+        { modalId, modalTitle, modalBody, onOkHandler },
+        null
+      ),
+      document.getElementById("modal-container")
     );
+    halfmoon.toggleModal(modalId);
+  }
+
+  render() {
+    let elements = [
+      React.createElement("h1", null, "My To-dos"),
+      React.createElement(
+        CreateTodoButton,
+        { updateView: this.updateView },
+        null
+      ),
+    ];
+
+    if (this.state.activeView == "TodoListView") {
+      elements.push(
+        React.createElement(
+          TodoListView,
+          {
+            showConfirmationModal: this.showConfirmationModal,
+            updateView: this.updateView,
+          },
+          null
+        )
+      );
+    } else if (this.state.activeView == "CreateTodoView") {
+      elements.push(
+        React.createElement(
+          CreateTodoView,
+          { updateView: this.updateView },
+          null
+        )
+      );
+    } else if (this.state.activeView == "EditTodoView") {
+      elements.push(
+        React.createElement(EditTodoView, { updateView: this.updateView }, null)
+      );
+    }
+
+    return elements;
   }
 }
 
-fetch("/api/todos", { method: "GET", credentials: "same-origin" })
-  .then((response) => {
-    return response.ok
-      ? response.json()
-      : Promise.reject("Error while retrieving todos");
-  })
-  .then((json) => {
-    ReactDOM.render(
-      json.map((todo) =>
-        React.createElement(
-          Todo,
-          { title: todo.title, contents: todo.contents },
-          null
-        )
-      ),
-      document.getElementById("app-root")
-    );
-  });
+ReactDOM.render(
+  React.createElement(App, null, null),
+  document.getElementById("app-root")
+);

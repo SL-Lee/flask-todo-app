@@ -25,6 +25,7 @@ app.register_blueprint(api_blueprint.api_blueprint)
 app.register_blueprint(todo_app_blueprint.todo_app_blueprint)
 
 csrf = CSRFProtect(app)
+csrf.exempt(api_blueprint.api_blueprint)
 
 login_manager = LoginManager()
 login_manager.init_app(app)
