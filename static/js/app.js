@@ -27,7 +27,7 @@ class App extends React.Component {
       ),
       document.getElementById("modal-container")
     );
-    halfmoon.toggleModal(modalId);
+    setTimeout(() => halfmoon.toggleModal(modalId));
   }
 
   render() {
