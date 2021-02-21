@@ -2,8 +2,8 @@ function toggleDarkMode() {
   let [oldIconClass, newIconClass] = document
     .querySelector("body")
     .classList.contains("dark-mode")
-    ? ["bi-brightness-high-fill", "bi-moon"]
-    : ["bi-moon", "bi-brightness-high-fill"];
+    ? ["fa-sun", "fa-moon"]
+    : ["fa-moon", "fa-sun"];
 
   halfmoon.toggleDarkMode();
 
