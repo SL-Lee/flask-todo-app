@@ -29,15 +29,159 @@ export class Todo extends React.Component {
 }
 
 export class CreateTodoButton extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { showModal: false };
+    this.handleClick = this.handleClick.bind(this);
+    this.hideModal = this.hideModal.bind(this);
+  }
+
+  handleClick(e) {
+    this.setState({ showModal: true });
+  }
+
+  hideModal(e) {
+    this.setState({ showModal: false });
+  }
+
+  render() {
+    return [
+      React.createElement(
+        "a",
+        {
+          class: "btn btn-primary",
+          onClick: this.handleClick,
+        },
+        React.createElement("i", { class: "fas fa-plus mr-5" }, null),
+        "Create"
+      ),
+      React.createElement(
+        Modal,
+        {
+          show: this.state.showModal,
+          modalId: "create-todo-modal",
+          modalTitle: "Create new to-do",
+          onCancelHandler: this.hideModal,
+          onOkHandler: (e) =>
+            document.getElementById("create-todo-form").requestSubmit(),
+        },
+        React.createElement(
+          CreateTodoForm,
+          {
+            formId: "create-todo-form",
+            hideModal: this.hideModal,
+            createTodo: this.props.createTodo,
+          },
+          null
+        )
+      ),
+    ];
+  }
+}
+
+export class CreateTodoForm extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { titleInput: "", contentsInput: "" };
+    this.handleTitleChange = this.handleTitleChange.bind(this);
+    this.handleContentsChange = this.handleContentsChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  handleSubmit(e) {
+    e.preventDefault();
+    this.props.createTodo(
+      this.props.formId,
+      this.state.titleInput,
+      this.state.contentsInput
+    );
+    this.props.hideModal();
+  }
+
+  handleTitleChange(e) {
+    this.setState({ titleInput: e.target.value });
+  }
+
+  handleContentsChange(e) {
+    this.setState({ contentsInput: e.target.value });
+  }
+
   render() {
     return React.createElement(
-      "a",
-      {
-        class: "btn btn-primary",
-        onClick: (e) => this.props.updateView("CreateTodoView"),
-      },
-      React.createElement("i", { class: "fas fa-plus mr-5" }, null),
-      "Create"
+      "form",
+      { onSubmit: this.handleSubmit, id: this.props.formId },
+      React.createElement(
+        TodoTitleInput,
+        {
+          value: this.state.titleInput,
+          handleTitleChange: this.handleTitleChange,
+        },
+        null
+      ),
+      React.createElement(
+        TodoContentsInput,
+        {
+          value: this.state.contentsInput,
+          handleContentsChange: this.handleContentsChange,
+        },
+        null
+      ),
+      React.createElement(
+        "input",
+        { type: "submit", style: { display: "none" } },
+        null
+      )
+    );
+  }
+}
+
+export class TodoTitleInput extends React.Component {
+  render() {
+    return React.createElement(
+      "div",
+      { class: "form-group" },
+      React.createElement("label", { for: "todo-title-input" }, "To-do Title"),
+      React.createElement(
+        "input",
+        {
+          id: "todo-title-input",
+          class: "form-control",
+          type: "text",
+          name: "todoTitle",
+          value: this.props.value,
+          placeholder: "To-do Title",
+          required: "required",
+          onChange: this.props.handleTitleChange,
+        },
+        null
+      )
+    );
+  }
+}
+
+export class TodoContentsInput extends React.Component {
+  render() {
+    return React.createElement(
+      "div",
+      { class: "form-group" },
+      React.createElement(
+        "label",
+        { for: "todo-title-input" },
+        "To-do Contents"
+      ),
+      React.createElement(
+        "textarea",
+        {
+          id: "todo-contents-input",
+          class: "form-control",
+          style: { resize: "none" },
+          name: "todoContents",
+          value: this.props.value,
+          placeholder: "To-do Contents",
+          onChange: this.props.handleContentsChange,
+        },
+        null
+      )
     );
   }
 }
@@ -63,11 +207,11 @@ export class DeleteTodoButton extends React.Component {
     this.handleModalCancel = this.handleModalCancel.bind(this);
   }
 
-  handleClick() {
+  handleClick(e) {
     this.setState({ showModal: true });
   }
 
-  handleModalCancel() {
+  handleModalCancel(e) {
     this.setState({ showModal: false });
   }
 
@@ -84,11 +228,11 @@ export class DeleteTodoButton extends React.Component {
       React.createElement(
         Modal,
         {
+          show: this.state.showModal,
           modalId: "delete-todo-modal",
-          modalTitle: "Delete todo?",
+          modalTitle: "Delete to-do?",
           onCancelHandler: this.handleModalCancel,
           onOkHandler: (e) => this.props.deleteTodo(this.props.id),
-          show: this.state.showModal,
         },
         React.createElement(
           "p",
