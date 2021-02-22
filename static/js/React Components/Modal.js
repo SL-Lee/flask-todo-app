@@ -1,4 +1,33 @@
 class Modal extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { observer: null };
+  }
+
+  componentDidMount() {
+    let observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (
+          mutation.type == "attributes" &&
+          mutation.oldValue == "modal show"
+        ) {
+          this.props.onCancelHandler();
+        }
+      });
+    });
+    observer.observe(document.getElementById(this.props.modalId), {
+      attributes: true,
+      attributeFilter: ["class"],
+      attributeOldValue: true,
+    });
+    this.setState({ observer: observer });
+  }
+
+  componentWillUnmount() {
+    this.state.observer.disconnect();
+    this.setState({ observer: null });
+  }
+
   render() {
     return ReactDOM.createPortal(
       React.createElement(
