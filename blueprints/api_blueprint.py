@@ -67,8 +67,8 @@ class Todos(Resource):
 
         args = self.put_parser.parse_args()
         todo = Todo.query.get(args["todoId"])
-        todo.title = args["title"]
-        todo.contents = args["contents"]
+        todo.title = args["todoTitle"]
+        todo.contents = args["todoContents"]
         db.session.commit()
         return {"status": "Success"}
 

@@ -1,10 +1,12 @@
-import { CreateTodoButton, Todo } from "./appComponents.js";
+import CreateTodoButton from "./CreateTodoButton.js";
+import Todo from "./Todo.js";
 
-export class TodoListView extends React.Component {
+class TodoList extends React.Component {
   constructor(props) {
     super(props);
     this.state = { todos: [] };
     this.createTodo = this.createTodo.bind(this);
+    this.editTodo = this.editTodo.bind(this);
     this.deleteTodo = this.deleteTodo.bind(this);
   }
 
@@ -17,21 +19,7 @@ export class TodoListView extends React.Component {
     let json = await response.json();
 
     if (json.status == "Success") {
-      this.setState({
-        todos: this.state.todos.concat([
-          React.createElement(
-            Todo,
-            {
-              id: json.newTodoId,
-              title: todoTitle,
-              contents: todoContents,
-              deleteTodo: this.deleteTodo,
-              updateView: this.props.updateView,
-            },
-            null
-          ),
-        ]),
-      });
+      this.setState({ todos: await this.fetchTodos() });
       halfmoon.initStickyAlert({
         title: "To-do created",
         content: "To-do created successfully.",
@@ -42,6 +30,34 @@ export class TodoListView extends React.Component {
       halfmoon.initStickyAlert({
         title: "Error while creating to-do",
         content: "There was an error while creating the to-do.",
+        alertType: "alert-danger",
+        timeShown: 5000,
+      });
+    }
+  }
+
+  async editTodo(editTodoFormId, todoId, todoTitle, todoContents) {
+    let formData = new FormData(document.getElementById(editTodoFormId));
+    formData.append("todoId", todoId);
+    let response = await fetch("/api/todos", {
+      method: "PUT",
+      credentials: "same-origin",
+      body: formData,
+    });
+    let json = await response.json();
+
+    if (json.status == "Success") {
+      this.setState({ todos: await this.fetchTodos() });
+      halfmoon.initStickyAlert({
+        title: "To-do edited",
+        content: "To-do edited successfully.",
+        alertType: "alert-success",
+        timeShown: 5000,
+      });
+    } else {
+      halfmoon.initStickyAlert({
+        title: "Error while editing to-do",
+        content: "There was an error while editing the to-do.",
         alertType: "alert-danger",
         timeShown: 5000,
       });
@@ -59,9 +75,7 @@ export class TodoListView extends React.Component {
     let json = await response.json();
 
     if (json.status == "Success") {
-      this.setState({
-        todos: this.state.todos.filter((todo) => todo.props.id != todoId),
-      });
+      this.setState({ todos: await this.fetchTodos() });
       halfmoon.initStickyAlert({
         title: "To-do deleted",
         content: "To-do deleted successfully.",
@@ -91,8 +105,8 @@ export class TodoListView extends React.Component {
           id: todo.id,
           title: todo.title,
           contents: todo.contents,
+          editTodo: this.editTodo,
           deleteTodo: this.deleteTodo,
-          updateView: this.props.updateView,
         },
         null
       )
@@ -121,8 +135,4 @@ export class TodoListView extends React.Component {
   }
 }
 
-export class EditTodoView extends React.Component {
-  render() {
-    return React.createElement("p", null, "Edit");
-  }
-}
+export default TodoList;

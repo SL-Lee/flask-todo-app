@@ -1,30 +1,11 @@
-import { EditTodoView, TodoListView } from "./appViews.js";
+import TodoList from "./React Components/TodoList.js";
 
 class App extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = { activeView: "TodoListView" };
-    this.updateView = this.updateView.bind(this);
-  }
-
-  updateView(newView) {
-    this.setState({ activeView: newView });
-  }
-
   render() {
-    let elements = [React.createElement("h1", null, "My To-dos")];
-
-    if (this.state.activeView == "TodoListView") {
-      elements.push(
-        React.createElement(TodoListView, { updateView: this.updateView }, null)
-      );
-    } else if (this.state.activeView == "EditTodoView") {
-      elements.push(
-        React.createElement(EditTodoView, { updateView: this.updateView }, null)
-      );
-    }
-
-    return elements;
+    return [
+      React.createElement("h1", null, "My To-dos"),
+      React.createElement(TodoList, null, null),
+    ];
   }
 }
 
