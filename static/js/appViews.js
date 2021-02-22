@@ -52,7 +52,6 @@ export class TodoListView extends React.Component {
           title: todo.title,
           contents: todo.contents,
           deleteTodo: this.deleteTodo,
-          showConfirmationModal: this.props.showConfirmationModal,
           updateView: this.props.updateView,
         },
         null

@@ -21,7 +21,6 @@ export class Todo extends React.Component {
         {
           id: this.props.id,
           deleteTodo: this.props.deleteTodo,
-          showConfirmationModal: this.props.showConfirmationModal,
         },
         null
       )
@@ -37,11 +36,7 @@ export class CreateTodoButton extends React.Component {
         class: "btn btn-primary",
         onClick: (e) => this.props.updateView("CreateTodoView"),
       },
-      React.createElement(
-        "i",
-        { class: "fas fa-plus mr-5" },
-        null
-      ),
+      React.createElement("i", { class: "fas fa-plus mr-5" }, null),
       "Create"
     );
   }
@@ -61,70 +56,104 @@ export class EditTodoButton extends React.Component {
 }
 
 export class DeleteTodoButton extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { showModal: false };
+    this.handleClick = this.handleClick.bind(this);
+    this.handleModalCancel = this.handleModalCancel.bind(this);
+  }
+
+  handleClick() {
+    this.setState({ showModal: true });
+  }
+
+  handleModalCancel() {
+    this.setState({ showModal: false });
+  }
+
   render() {
-    return React.createElement(
-      "a",
-      {
-        class: "ml-10 btn btn-danger",
-        onClick: (e) =>
-          this.props.showConfirmationModal(
-            "delete-todo-modal",
-            "Delete todo?",
-            "Are you sure you want to delete this to-do?",
-            (e) => this.props.deleteTodo(this.props.id)
-          ),
-      },
-      "Delete"
-    );
+    return [
+      React.createElement(
+        "a",
+        {
+          class: "ml-10 btn btn-danger",
+          onClick: this.handleClick,
+        },
+        "Delete"
+      ),
+      React.createElement(
+        Modal,
+        {
+          modalId: "delete-todo-modal",
+          modalTitle: "Delete todo?",
+          onCancelHandler: this.handleModalCancel,
+          onOkHandler: (e) => this.props.deleteTodo(this.props.id),
+          show: this.state.showModal,
+        },
+        React.createElement(
+          "p",
+          null,
+          "Are you sure you want to delete this to-do?"
+        )
+      ),
+    ];
   }
 }
 
-export class ConfirmationModal extends React.Component {
+export class Modal extends React.Component {
   render() {
-    return React.createElement(
-      "div",
-      { class: "modal", id: this.props.modalId, role: "dialog" },
+    return ReactDOM.createPortal(
       React.createElement(
         "div",
-        { class: "modal-dialog", role: "document" },
+        {
+          class: `modal${this.props.show ? " show" : ""}`,
+          id: this.props.modalId,
+          role: "dialog",
+        },
         React.createElement(
           "div",
-          { class: "modal-content" },
-          React.createElement(
-            "a",
-            { class: "close", role: "button", "data-dismiss": "modal" },
-            React.createElement("span", null, "×")
-          ),
-          React.createElement(
-            "h5",
-            { class: "modal-title" },
-            this.props.modalTitle
-          ),
-          React.createElement("p", null, this.props.modalBody),
+          { class: "modal-dialog", role: "document" },
           React.createElement(
             "div",
-            { class: "text-right mt-20" },
+            { class: "modal-content" },
             React.createElement(
               "a",
-              {
-                class: "btn mr-5",
-                role: "button",
-                "data-dismiss": "modal",
-              },
-              "Cancel"
+              { class: "close", role: "button", "data-dismiss": "modal" },
+              "×"
             ),
             React.createElement(
-              "a",
-              {
-                class: "btn btn-primary",
-                role: "button",
-                onClick: this.props.onOkHandler,
-              },
-              "OK"
+              "h5",
+              { class: "modal-title" },
+              this.props.modalTitle
+            ),
+            this.props.children,
+            React.createElement(
+              "div",
+              { class: "text-right mt-20" },
+              React.createElement(
+                "a",
+                {
+                  class: "btn mr-5",
+                  role: "button",
+                  "data-dismiss": "modal",
+                  onClick: this.props.onCancelHandler,
+                },
+                "Cancel"
+              ),
+              React.createElement(
+                "a",
+                {
+                  class: "btn btn-primary",
+                  role: "button",
+                  onClick: this.props.onOkHandler,
+                },
+                "OK"
+              )
             )
           )
         )
-      )
+      ),
+      document.getElementById("modal-root")
     );
   }
 }

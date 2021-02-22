@@ -1,33 +1,15 @@
-import { ConfirmationModal, CreateTodoButton } from "./appComponents.js";
+import { CreateTodoButton } from "./appComponents.js";
 import { CreateTodoView, EditTodoView, TodoListView } from "./appViews.js";
 
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = { activeView: "TodoListView" };
-    this.showConfirmationModal = this.showConfirmationModal.bind(this);
     this.updateView = this.updateView.bind(this);
   }
 
   updateView(newView) {
     this.setState({ activeView: newView });
-  }
-
-  showConfirmationModal(
-    modalId,
-    modalTitle,
-    modalBody,
-    onOkHandler
-  ) {
-    ReactDOM.render(
-      React.createElement(
-        ConfirmationModal,
-        { modalId, modalTitle, modalBody, onOkHandler },
-        null
-      ),
-      document.getElementById("modal-container")
-    );
-    setTimeout(() => halfmoon.toggleModal(modalId));
   }
 
   render() {
@@ -42,14 +24,7 @@ class App extends React.Component {
 
     if (this.state.activeView == "TodoListView") {
       elements.push(
-        React.createElement(
-          TodoListView,
-          {
-            showConfirmationModal: this.showConfirmationModal,
-            updateView: this.updateView,
-          },
-          null
-        )
+        React.createElement(TodoListView, { updateView: this.updateView }, null)
       );
     } else if (this.state.activeView == "CreateTodoView") {
       elements.push(
