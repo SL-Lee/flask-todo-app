@@ -18,7 +18,7 @@ class EditTodoButton extends React.Component {
               EditTodoForm,
               {
                 modalId: "edit-todo-modal",
-                formId: `edit-todo-form`,
+                formId: "edit-todo-form",
                 todoId: this.props.id,
                 todoTitle: this.props.title,
                 todoContents: this.props.contents,
