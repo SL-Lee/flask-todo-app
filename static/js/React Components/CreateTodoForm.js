@@ -12,12 +12,8 @@ class CreateTodoForm extends React.Component {
 
   handleSubmit(e) {
     e.preventDefault();
-    this.props.createTodo(
-      this.props.formId,
-      this.state.titleInput,
-      this.state.contentsInput
-    );
-    this.props.hideModal();
+    this.props.createTodo(this.props.formId);
+    this.props.hideModal(this.props.modalId);
     this.setState({ titleInput: "", contentsInput: "" });
   }
 

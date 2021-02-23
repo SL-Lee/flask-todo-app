@@ -15,13 +15,8 @@ class EditTodoForm extends React.Component {
 
   handleSubmit(e) {
     e.preventDefault();
-    this.props.editTodo(
-      this.props.formId,
-      this.props.todoId,
-      this.state.titleInput,
-      this.state.contentsInput
-    );
-    this.props.hideModal();
+    this.props.editTodo(this.props.formId, this.props.todoId);
+    this.props.hideModal(this.props.modalId);
     this.setState({ titleInput: "", contentsInput: "" });
   }
 

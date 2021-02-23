@@ -20,6 +20,8 @@ class Todo extends React.Component {
           id: this.props.id,
           title: this.props.title,
           contents: this.props.contents,
+          showModal: this.props.showModal,
+          hideModal: this.props.hideModal,
           editTodo: this.props.editTodo,
         },
         null
@@ -28,6 +30,8 @@ class Todo extends React.Component {
         DeleteTodoButton,
         {
           id: this.props.id,
+          showModal: this.props.showModal,
+          hideModal: this.props.hideModal,
           deleteTodo: this.props.deleteTodo,
         },
         null

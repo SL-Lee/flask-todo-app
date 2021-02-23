@@ -1,4 +1,5 @@
 import CreateTodoButton from "./CreateTodoButton.js";
+import Modal from "./Modal.js";
 import Todo from "./Todo.js";
 
 class TodoList extends React.Component {
@@ -10,7 +11,20 @@ class TodoList extends React.Component {
     this.deleteTodo = this.deleteTodo.bind(this);
   }
 
-  async createTodo(createTodoFormId, todoTitle, todoContents) {
+  showModal(props = null, children = null) {
+    ReactDOM.unmountComponentAtNode(document.getElementById("modal-root"));
+    ReactDOM.render(
+      React.createElement(Modal, props, children),
+      document.getElementById("modal-root"),
+      () => setTimeout(halfmoon.toggleModal, 10, props.modalId)
+    );
+  }
+
+  hideModal(modalId) {
+    document.getElementById(modalId).classList.remove("show");
+  }
+
+  async createTodo(createTodoFormId) {
     let response = await fetch("/api/todos", {
       method: "POST",
       credentials: "same-origin",
@@ -36,7 +50,7 @@ class TodoList extends React.Component {
     }
   }
 
-  async editTodo(editTodoFormId, todoId, todoTitle, todoContents) {
+  async editTodo(editTodoFormId, todoId) {
     let formData = new FormData(document.getElementById(editTodoFormId));
     formData.append("todoId", todoId);
     let response = await fetch("/api/todos", {
@@ -105,6 +119,8 @@ class TodoList extends React.Component {
           id: todo.id,
           title: todo.title,
           contents: todo.contents,
+          showModal: this.showModal,
+          hideModal: this.hideModal,
           editTodo: this.editTodo,
           deleteTodo: this.deleteTodo,
         },
@@ -121,7 +137,11 @@ class TodoList extends React.Component {
     return [
       React.createElement(
         CreateTodoButton,
-        { createTodo: this.createTodo },
+        {
+          showModal: this.showModal,
+          hideModal: this.hideModal,
+          createTodo: this.createTodo,
+        },
         null
       ),
       this.state.todos.length != 0
