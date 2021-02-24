@@ -82,7 +82,7 @@ class TodoList extends React.Component {
   async updateTodoStatus(todoId, newTodoStatus) {
     let formData = new FormData();
     formData.append("todoId", todoId);
-    formData.append("todoCompleted", newTodoStatus ? "true" : "");
+    formData.append("todoCompleted", newTodoStatus);
     let response = await fetch("/api/todos", {
       method: "PATCH",
       credentials: "same-origin",

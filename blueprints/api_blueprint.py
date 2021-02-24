@@ -1,6 +1,6 @@
 from flask import Blueprint, abort
 from flask_login import current_user, login_required
-from flask_restx import Api, Resource, apidoc, reqparse
+from flask_restx import Api, Resource, apidoc, inputs, reqparse
 
 from models import Todo, TodoSchema, User, db
 
@@ -35,11 +35,11 @@ class Todos(Resource):
         "todoId", required=True, type=int, location="form"
     )
     patch_parser.add_argument(
-        "todoCompleted", required=True, type=bool, location="form"
+        "todoCompleted", required=True, type=inputs.boolean, location="form"
     )
 
     delete_parser = patch_parser.copy()
-    delete_parser.remove_argument("todoStatus")
+    delete_parser.remove_argument("todoCompleted")
 
     @api.response(201, "Created")
     @api.response(401, "Unauthorized")
@@ -72,7 +72,13 @@ class Todos(Resource):
             abort(401)
 
         args = self.put_parser.parse_args()
-        todo = Todo.query.get(args["todoId"])
+        todo = Todo.query.filter_by(
+            id=args["todoId"], user_id=current_user.id
+        ).first()
+
+        if todo is None:
+            return {"status": "Not found"}
+
         todo.title = args["todoTitle"]
         todo.contents = args["todoContents"]
         db.session.commit()
@@ -86,7 +92,13 @@ class Todos(Resource):
             abort(401)
 
         args = self.patch_parser.parse_args()
-        todo = Todo.query.get(args["todoId"])
+        todo = Todo.query.filter_by(
+            id=args["todoId"], user_id=current_user.id
+        ).first()
+
+        if todo is None:
+            return {"status": "Not found"}
+
         todo.completed = args["todoCompleted"]
         db.session.commit()
         return {"status": "Success"}
@@ -99,8 +111,11 @@ class Todos(Resource):
             abort(401)
 
         args = self.delete_parser.parse_args()
+        todo = Todo.query.filter_by(
+            id=args["todoId"], user_id=current_user.id
+        ).first()
 
-        if (todo := Todo.query.filter_by(id=args["todoId"]).first()) is None:
+        if todo is None:
             return {"status": "Not found"}
 
         db.session.delete(todo)
