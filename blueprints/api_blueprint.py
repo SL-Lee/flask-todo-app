@@ -30,10 +30,16 @@ class Todos(Resource):
     put_parser = post_parser.copy()
     put_parser.add_argument("todoId", required=True, type=int, location="form")
 
-    delete_parser = reqparse.RequestParser(bundle_errors=True)
-    delete_parser.add_argument(
+    patch_parser = reqparse.RequestParser(bundle_errors=True)
+    patch_parser.add_argument(
         "todoId", required=True, type=int, location="form"
     )
+    patch_parser.add_argument(
+        "todoCompleted", required=True, type=bool, location="form"
+    )
+
+    delete_parser = patch_parser.copy()
+    delete_parser.remove_argument("todoStatus")
 
     @api.response(201, "Created")
     @api.response(401, "Unauthorized")
@@ -69,6 +75,19 @@ class Todos(Resource):
         todo = Todo.query.get(args["todoId"])
         todo.title = args["todoTitle"]
         todo.contents = args["todoContents"]
+        db.session.commit()
+        return {"status": "Success"}
+
+    @api.expect(patch_parser)
+    @api.response(200, "OK")
+    @api.response(401, "Unauthorized")
+    def patch(self):
+        if not current_user.is_authenticated:
+            abort(401)
+
+        args = self.patch_parser.parse_args()
+        todo = Todo.query.get(args["todoId"])
+        todo.completed = args["todoCompleted"]
         db.session.commit()
         return {"status": "Success"}
 

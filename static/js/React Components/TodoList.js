@@ -8,6 +8,7 @@ class TodoList extends React.Component {
     this.state = { todos: [] };
     this.createTodo = this.createTodo.bind(this);
     this.editTodo = this.editTodo.bind(this);
+    this.updateTodoStatus = this.updateTodoStatus.bind(this);
     this.deleteTodo = this.deleteTodo.bind(this);
   }
 
@@ -78,6 +79,29 @@ class TodoList extends React.Component {
     }
   }
 
+  async updateTodoStatus(todoId, newTodoStatus) {
+    let formData = new FormData();
+    formData.append("todoId", todoId);
+    formData.append("todoCompleted", newTodoStatus ? "true" : "");
+    let response = await fetch("/api/todos", {
+      method: "PATCH",
+      credentials: "same-origin",
+      body: formData,
+    });
+    let json = await response.json();
+
+    if (json.status == "Success") {
+      this.setState({ todos: await this.fetchTodos() });
+    } else {
+      halfmoon.initStickyAlert({
+        title: "Error while updating to-do status",
+        content: "There was an error while updating the to-do status.",
+        alertType: "alert-danger",
+        timeShown: 5000,
+      });
+    }
+  }
+
   async deleteTodo(todoId) {
     let formData = new FormData();
     formData.append("todoId", todoId);
@@ -119,9 +143,11 @@ class TodoList extends React.Component {
           id: todo.id,
           title: todo.title,
           contents: todo.contents,
+          completed: todo.completed,
           showModal: this.showModal,
           hideModal: this.hideModal,
           editTodo: this.editTodo,
+          updateTodoStatus: this.updateTodoStatus,
           deleteTodo: this.deleteTodo,
         },
         null

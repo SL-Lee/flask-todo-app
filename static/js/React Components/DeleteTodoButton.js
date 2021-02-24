@@ -3,7 +3,7 @@ class DeleteTodoButton extends React.Component {
     return React.createElement(
       "a",
       {
-        class: "ml-10 btn btn-danger",
+        class: "btn btn-danger",
         onClick: () =>
           this.props.showModal(
             {
