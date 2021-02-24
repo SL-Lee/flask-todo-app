@@ -3,7 +3,7 @@ class UpdateTodoStatusButton extends React.Component {
     return React.createElement(
       "a",
       {
-        class: "btn btn-success",
+        class: `btn btn-${this.props.completed ? "secondary" : "success"}`,
         onClick: () =>
           this.props.updateTodoStatus(this.props.id, !this.props.completed),
       },

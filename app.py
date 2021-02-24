@@ -16,10 +16,12 @@ from forms import LoginForm, SignupForm
 from models import User, db
 
 app = Flask(__name__)
-
-app.secret_key = os.urandom(16)
-app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///db.sqlite3"
+app.config.update(
+    SECRET_KEY=os.urandom(32),
+    SQLALCHEMY_TRACK_MODIFICATIONS=False,
+    SQLALCHEMY_DATABASE_URI="sqlite:///db.sqlite3",
+    SESSION_COOKIE_SAME_SITE="Lax",
+)
 
 app.register_blueprint(api_blueprint.api_blueprint)
 app.register_blueprint(todo_app_blueprint.todo_app_blueprint)
@@ -27,8 +29,7 @@ app.register_blueprint(todo_app_blueprint.todo_app_blueprint)
 csrf = CSRFProtect(app)
 csrf.exempt(api_blueprint.api_blueprint)
 
-login_manager = LoginManager()
-login_manager.init_app(app)
+login_manager = LoginManager(app)
 login_manager.login_view = "login"
 login_manager.login_message_category = "danger"
 
