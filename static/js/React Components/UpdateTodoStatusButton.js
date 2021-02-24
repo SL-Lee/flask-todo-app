@@ -1,10 +1,5 @@
 class UpdateTodoStatusButton extends React.Component {
-  constructor(props) {
-    super(props);
-    this.handleClick = this.handleClick.bind(this);
-  }
-
-  handleClick(e) {
+  handleClick = (e) => {
     e.stopPropagation();
     this.props.updateTodoStatus(this.props.id, !this.props.completed);
   }

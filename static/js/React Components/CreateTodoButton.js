@@ -1,12 +1,7 @@
 import CreateTodoForm from "./CreateTodoForm.js";
 
 class CreateTodoButton extends React.Component {
-  constructor(props) {
-    super(props);
-    this.handleClick = this.handleClick.bind(this);
-  }
-
-  handleClick(e) {
+  handleClick = (e) => {
     this.props.showModal(
       {
         modalId: "create-todo-modal",

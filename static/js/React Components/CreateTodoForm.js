@@ -5,23 +5,20 @@ class CreateTodoForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = { titleInput: "", contentsInput: "" };
-    this.handleTitleChange = this.handleTitleChange.bind(this);
-    this.handleContentsChange = this.handleContentsChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  handleSubmit(e) {
+  handleSubmit = (e) => {
     e.preventDefault();
     this.props.createTodo(this.props.formId);
     this.props.hideModal(this.props.modalId);
     this.setState({ titleInput: "", contentsInput: "" });
   }
 
-  handleTitleChange(e) {
+  handleTitleChange = (e) => {
     this.setState({ titleInput: e.target.value });
   }
 
-  handleContentsChange(e) {
+  handleContentsChange = (e) => {
     this.setState({ contentsInput: e.target.value });
   }
 

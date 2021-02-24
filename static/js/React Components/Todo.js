@@ -3,12 +3,7 @@ import EditTodoButton from "./EditTodoButton.js";
 import UpdateTodoStatusButton from "./UpdateTodoStatusButton.js";
 
 class Todo extends React.Component {
-  constructor(props) {
-    super(props);
-    this.handleClick = this.handleClick.bind(this);
-  }
-
-  handleClick(e) {
+  handleClick = (e) => {
     this.props.showModal(
       {
         modalId: "view-todo-modal",

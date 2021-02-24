@@ -6,10 +6,6 @@ class TodoList extends React.Component {
   constructor(props) {
     super(props);
     this.state = { todos: [] };
-    this.createTodo = this.createTodo.bind(this);
-    this.editTodo = this.editTodo.bind(this);
-    this.updateTodoStatus = this.updateTodoStatus.bind(this);
-    this.deleteTodo = this.deleteTodo.bind(this);
   }
 
   showModal(props = null, ...children) {
@@ -25,7 +21,7 @@ class TodoList extends React.Component {
     document.getElementById(modalId).classList.remove("show");
   }
 
-  async createTodo(createTodoFormId) {
+  createTodo = async (createTodoFormId) => {
     let response = await fetch("/api/todos", {
       method: "POST",
       credentials: "same-origin",
@@ -51,7 +47,7 @@ class TodoList extends React.Component {
     }
   }
 
-  async editTodo(editTodoFormId, todoId) {
+  editTodo = async (editTodoFormId, todoId) => {
     let formData = new FormData(document.getElementById(editTodoFormId));
     formData.append("todoId", todoId);
     let response = await fetch("/api/todos", {
@@ -79,7 +75,7 @@ class TodoList extends React.Component {
     }
   }
 
-  async updateTodoStatus(todoId, newTodoStatus) {
+  updateTodoStatus = async (todoId, newTodoStatus) => {
     let formData = new FormData();
     formData.append("todoId", todoId);
     formData.append("todoCompleted", newTodoStatus);
@@ -102,7 +98,7 @@ class TodoList extends React.Component {
     }
   }
 
-  async deleteTodo(todoId) {
+  deleteTodo = async (todoId) => {
     let formData = new FormData();
     formData.append("todoId", todoId);
     let response = await fetch("/api/todos", {
