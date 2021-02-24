@@ -12,7 +12,7 @@ class TodoList extends React.Component {
     this.deleteTodo = this.deleteTodo.bind(this);
   }
 
-  showModal(props = null, children = null) {
+  showModal(props = null, ...children) {
     ReactDOM.unmountComponentAtNode(document.getElementById("modal-root"));
     ReactDOM.render(
       React.createElement(Modal, props, children),

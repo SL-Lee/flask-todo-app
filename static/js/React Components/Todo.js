@@ -3,13 +3,52 @@ import EditTodoButton from "./EditTodoButton.js";
 import UpdateTodoStatusButton from "./UpdateTodoStatusButton.js";
 
 class Todo extends React.Component {
+  constructor(props) {
+    super(props);
+    this.handleClick = this.handleClick.bind(this);
+  }
+
+  handleClick(e) {
+    this.props.showModal(
+      {
+        modalId: "view-todo-modal",
+        modalTitle: this.props.title,
+        showSecondaryButton: false,
+        primaryButtonText: "Close",
+        onOkHandler: (e) => halfmoon.toggleModal("view-todo-modal"),
+      },
+      React.createElement(
+        "p",
+        { class: "font-weight-bold" },
+        "Status: ",
+        React.createElement(
+          "span",
+          { class: `text-${this.props.completed ? "success" : "secondary"}` },
+          this.props.completed ? "COMPLETED" : "INCOMPLETE"
+        )
+      ),
+      React.createElement("hr", null, null),
+      this.props.contents
+        ? React.createElement("p", null, this.props.contents)
+        : React.createElement(
+          "p",
+          { class: "text-muted font-italic" },
+          "Content not provided"
+        )
+    );
+  }
+
   render() {
     return React.createElement(
       "div",
       { class: "col-12 col-md-6 col-xl-4" },
       React.createElement(
         "div",
-        { class: "card m-15" },
+        {
+          class: "card m-15",
+          style: { cursor: "pointer" },
+          onClick: this.handleClick,
+        },
         React.createElement(
           "h2",
           {
@@ -26,7 +65,9 @@ class Todo extends React.Component {
             {
               class: "text-truncate",
               style: {
-                textDecoration: this.props.completed ? "line-through" : "none",
+                textDecoration: this.props.completed
+                  ? "line-through"
+                  : "none",
               },
             },
             this.props.contents
@@ -70,7 +111,7 @@ class Todo extends React.Component {
             },
             null
           )
-        ),
+        )
       )
     );
   }

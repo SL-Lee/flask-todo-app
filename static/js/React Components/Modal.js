@@ -1,4 +1,14 @@
 class Modal extends React.Component {
+  static defaultProps = {
+    modalId: "modal",
+    modalTitle: "Modal",
+    children: null,
+    showSecondaryButton: true,
+    secondaryButtonText: "Cancel",
+    primaryButtonText: "OK",
+    onOkHandler: () => { },
+  };
+
   render() {
     return ReactDOM.createPortal(
       React.createElement(
@@ -24,15 +34,17 @@ class Modal extends React.Component {
             React.createElement(
               "div",
               { class: "text-right mt-20" },
-              React.createElement(
-                "a",
-                {
-                  class: "btn mr-5",
-                  role: "button",
-                  "data-dismiss": "modal",
-                },
-                "Cancel"
-              ),
+              this.props.showSecondaryButton
+                ? React.createElement(
+                  "a",
+                  {
+                    class: "btn mr-5",
+                    role: "button",
+                    "data-dismiss": "modal",
+                  },
+                  this.props.secondaryButtonText
+                )
+                : null,
               React.createElement(
                 "a",
                 {
@@ -40,7 +52,7 @@ class Modal extends React.Component {
                   role: "button",
                   onClick: this.props.onOkHandler,
                 },
-                "OK"
+                this.props.primaryButtonText
               )
             )
           )
