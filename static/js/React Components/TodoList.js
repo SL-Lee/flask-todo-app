@@ -145,7 +145,14 @@ class TodoList extends React.Component {
         null
       ),
       this.state.todos.length != 0
-        ? this.state.todos
+        ? React.createElement(
+          "div",
+          {
+            class: "row",
+            style: { marginLeft: "-1.5rem", marginRight: "-1.5rem" },
+          },
+          this.state.todos
+        )
         : React.createElement(
           "p",
           { class: "text-muted text-center font-italic" },
