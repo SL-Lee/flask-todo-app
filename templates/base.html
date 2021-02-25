@@ -17,19 +17,9 @@
 <body
   class="dark-mode with-custom-webkit-scrollbars with-custom-css-scrollbars">
   <div id="modal-root"></div>
-  <div
-    class="page-wrapper with-navbar {% if current_user.is_authenticated %}with-sidebar{% endif %}"
-    data-sidebar-type="overlayed-sm-and-down">
+  <div class="page-wrapper with-navbar">
     <!-- Navbar -->
     <nav class="navbar">
-      {% if current_user.is_authenticated %}
-      <div class="navbar-content">
-        <button class="btn btn-action" type="button"
-          onclick="halfmoon.toggleSidebar()">
-          <i class="fas fa-bars"></i>
-        </button>
-      </div>
-      {% endif %}
       <a href="/" class="navbar-brand">
         <img src="/static/images/favicon.png" /> To-do
       </a>
@@ -81,50 +71,6 @@
         <i id="toggle-dark-mode-button-icon" class="fas fa-sun"></i>
       </button>
     </nav>
-
-    {% if current_user.is_authenticated %}
-    <!-- Sidebar overlay -->
-    <div class="sidebar-overlay" onclick="halfmoon.toggleSidebar()"></div>
-
-    <!-- Sidebar -->
-    <div class="sidebar">
-      <div class="sidebar-menu">
-        <a href="/" class="sidebar-brand mb-15">
-          <img src="/static/images/favicon.png" /> To-do
-        </a>
-        <h5 class="sidebar-title">Sidebar Header #1</h5>
-        <div class="sidebar-divider"></div>
-        <a href="#" class="sidebar-link sidebar-link-with-icon active">
-          <span class="sidebar-icon">
-            <i class="fas fa-home"></i>
-          </span> Sidebar Link #1
-        </a>
-        <a href="#" class="sidebar-link sidebar-link-with-icon">
-          <span class="sidebar-icon">
-            <i class="fas fa-book"></i>
-          </span> Sidebar Link #2
-        </a>
-        <br />
-        <h5 class="sidebar-title">Sidebar Header #2</h5>
-        <div class="sidebar-divider"></div>
-        <a href="#" class="sidebar-link sidebar-link-with-icon">
-          <span class="sidebar-icon">
-            <i class="fas fa-bookmark"></i>
-          </span> Sidebar Link #3
-        </a>
-        <a href="#" class="sidebar-link sidebar-link-with-icon">
-          <span class="sidebar-icon">
-            <i class="fas fa-box"></i>
-          </span> Sidebar Link #4
-        </a>
-        <a href="#" class="sidebar-link sidebar-link-with-icon">
-          <span class="sidebar-icon">
-            <i class="fas fa-calendar"></i>
-          </span> Sidebar Link #5
-        </a>
-      </div>
-    </div>
-    {% endif %}
 
     <!-- Sticky toast alerts -->
     <div class="sticky-alerts">
