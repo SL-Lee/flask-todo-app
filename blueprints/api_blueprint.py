@@ -53,7 +53,7 @@ class Todos(Resource):
         user.todos.append(new_todo)
         db.session.add(new_todo)
         db.session.commit()
-        return {"status": "Success", "newTodoId": new_todo.id}, 201
+        return {"status": "Success"}, 201
 
     @api.response(200, "OK")
     @api.response(401, "Unauthorized")
